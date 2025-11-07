@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <title>Cálculo IMC</title>
+    
+    <style>
+		/* Estiliza o contêiner principal */
+        .calc_imc-container {
+			max-width: 400px; /* Limita a largura do formulário */
+			margin-left: auto;
+			margin-right: auto;
+            margin-top: 180px; /* Adiciona margem superior */
+            padding: 20px;
+            border: 3px solid #dee2e6; /* Borda leve */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+        /* Estiliza a área de resposta */
+        #resp {
+            max-width: 400px;
+			margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa; /* Fundo cinza claro */
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            text-align: center;
+			font-weight: bold;
+			color: red;
+        }
+		.form-label {
+			color: #fffafa; 
+			background-color: rgba(220, 53, 69, 0.85);
+			font-size: 1.5em; /* Exemplo: Aumentar um pouco o tamanho */
+			font-weight: 700; /* Exemplo: Deixar um pouco mais grosso */
+		}
+		body {
+			background-image: url('/Calculadora_IMC/IMC.jpg');
+			background-position: center center; 
+			background-size: cover;          
+			background-repeat: no-repeat;    
+		}
+	</style>
+</head>
+
+<body class="container">
+    <div class="calc_imc-container">
+        
+        <form class="form">
+            
+            <div class="mb-3">
+                <label class="form-label">PESO</label>
+                <input class="form-control" type="number" id="peso"/>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">ALTURA</label>
+                <input class="form-control" type="number" id="altura"/>
+            </div>
+                           
+            <a href="#" class="btn btn-danger w-100 m-10" onclick="executar()">Executar</a>
+            
+        </form>
+        
+        <div id="resp">Resultado do IMC</div>
+    </div>
+	
+    <script src="/Calculadora_IMC/IMC_CALC.js"></script> 
+	<script>
+        function executar() {
+            // 1. Obter e converter valores dos inputs
+            const peso_str = document.getElementById("peso").value;
+            const altura_str = document.getElementById("altura").value;
+            const peso = parseFloat(peso_str);
+            const altura = parseFloat(altura_str);
+
+            const respDiv = document.getElementById("resp");
+            
+            // 2. Validação de Entrada
+            if (peso_str === "" || altura_str === "" || isNaN(peso) || isNaN(altura) || peso <= 0 || altura <= 0) {
+                respDiv.style.color = 'red';
+                respDiv.innerHTML = "❌ **ERRO:** Por favor, insira valores válidos e positivos para Peso e Altura.";
+                return;
+            }
+
+            // 3. Ajuste da Altura (Se o usuário digitar em cm, converte para metros)
+            // Assumimos que alturas acima de 3 metros são na verdade em centímetros.
+            const alturaMetros = (altura > 3) ? altura / 100 : altura; 
+
+            // 4. CÁLCULO e CLASSIFICAÇÃO (Chama as funções do arquivo IMC_CALC.js)
+            const valor_imc = imc(peso, alturaMetros); 
+            const classificacao = situacao(valor_imc); 
+            
+            // 5. EXIBIÇÃO DO RESULTADO NO HTML
+            
+            // Define a cor do texto baseada na classificação (perigo ou sucesso)
+            const cor = (valor_imc >= 25) ? '#dc3545' : '#198754'; // Vermelho para Obesidade/Sobrepeso, Verde para Ideal
+            
+            respDiv.style.color = cor;
+            respDiv.innerHTML = `
+                <h4>Seu IMC é: ${valor_imc.toFixed(2)}</h4>
+                <p>Classificação: <strong>${classificacao}</strong></p>
+            `;
+        }
+    </script>
+</body>
+</html>
