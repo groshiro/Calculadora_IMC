@@ -103,7 +103,19 @@
             // 5. EXIBIÇÃO DO RESULTADO NO HTML
             
             // Define a cor do texto baseada na classificação (perigo ou sucesso)
-            const cor = (valor_imc >= 25) ? '#dc3545' : '#198754'; // Vermelho para Obesidade/Sobrepeso, Verde para Ideal
+            // Define a cor do texto baseada na classificação (perigo ou sucesso)
+            
+			const cor = (valor_imc < 18.5) 
+			? '#00ffff' // Ciano para Abaixo do Peso (usei 18.5, padrão OMS)
+				: (valor_imc < 25) 
+				? '#198754' // Verde para Peso Normal
+					: (valor_imc < 30) 
+					? '#ffd700' // Gold para Sobrepeso (Padrão: 25 a 29.9)
+						: (valor_imc < 35) 
+						? '#ffa500' // Laranja para Obesidade Grau I (Padrão: 30 a 34.9)
+							: (valor_imc < 40) 
+							? '#ff7f50' // Coral para Obesidade Grau II (Padrão: 35 a 39.9)
+								: '#dc3545'; // Vermelho para Obesidade Grau III (Padrão: >= 40)
             
             respDiv.style.color = cor;
             respDiv.innerHTML = `
@@ -115,5 +127,6 @@
 </body>
 
 </html>
+
 
 
